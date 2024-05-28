@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:basketco/Utils/Colors.dart';
 import 'package:basketco/Component/reusable_button1.dart';
@@ -15,6 +16,11 @@ class CalculatorPage extends StatefulWidget {
 }
 
 class _CalculatorPageState extends State<CalculatorPage> {
+
+  // sign user out method
+  void signUserOut() {
+    FirebaseAuth.instance.signOut();
+  }
 
   List<dynamic> terangMain = [];
   List<dynamic> gelapMain = [];
@@ -294,96 +300,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
             color: Colors.white, // Warna ikon
           ),
         ),
-        actions: <Widget>[
-          // SvgPicture.asset(
-          //   'assets/image/logo-stat.svg',
-          //   width: 434,
-          //   height: 34,
-          // ),
-          Padding(padding: EdgeInsets.all(7)),
-          ElevatedButton(
-            onPressed: () {
-              // Navigasi ke layar WebView saat tombol ditekan
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => LogWebView(),
-              //   ),
-              // );
-            },
-            style: ElevatedButton.styleFrom(
-              //padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 3.0),
-              backgroundColor: BasketcoColors.grey, // Warna latar belakang tombol
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4), // Radius border (sesuaikan dengan kebutuhan)
-              ),
-              padding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-            ),
-            child: const Icon(
-              Icons.sort,
-              size: 24, // Ukuran ikon
-              color: Colors.white, // Warna ikon
-            ),
-          ),
-          Padding(padding: EdgeInsets.all(4)),
-          ElevatedButton(
-            onPressed: () {
-              // Navigasi ke layar WebView saat tombol ditekan
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => StatistikWebView(),
-              //   ),
-              // );
-            },
-            style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0), backgroundColor: BasketcoColors.grey, // Warna latar belakang tombol
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4), // Radius border (sesuaikan dengan kebutuhan)
-              ),
-            ),
-            child: const Icon(
-              Icons.bar_chart,
-              size: 24, // Ukuran ikon
-              color: Colors.white, // Warna ikon
-            ),
-          ),
-          Padding(padding: EdgeInsets.all(4)),
-          ElevatedButton(
-            onPressed: () {
-              //var matchData = matchDataList;
-              // String? id = matchData.id ?? '';
-              // Navigator.pop(context, {
-              //   'activeTerang': widget.activeTerang,
-              //   'activeGelap': widget.activeGelap,
-              // });
-              // Navigator.push(
-              //   context,
-              //   new MaterialPageRoute(
-              //     builder: (context) => new InputConfiguration(
-              //       token: widget.token,
-              //       matchData: widget.matchData,
-              //       initialColors: _selectedColors,
-              //       onColorsChanged: (colors) {
-              //         setState(() {
-              //           _selectedColors = colors;
-              //         });
-              //         Navigator.of(context).pop();
-              //         //yourWidgetKey.currentState?.updateButtonState();
-              //       }, selectedDate: widget.selectedDate,),
-              //   ),
-              // );
-            },
-            style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 3.0), backgroundColor: BasketcoColors.grey, // Warna latar belakang tombol
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4), // Radius border (sesuaikan dengan kebutuhan)
-              ),
-            ),
-            child: const Icon(
-              Icons.settings,
-              size: 24, // Ukuran ikon
-              color: Colors.white, // Warna ikon
-            ),
-          ),
+        actions: [
+          IconButton(
+            onPressed: signUserOut,
+            icon: Icon(Icons.logout),
+          )
         ],
       ),
       body: SingleChildScrollView(
