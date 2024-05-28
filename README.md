@@ -17,3 +17,6 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Calculator Screen
 ![image](https://github.com/Arraidh/basketco/assets/90848018/3cf8c268-cc3e-4029-9b33-1610291637a9)
+
+![screenshot](https://github.com/Arraidh/basketco/assets/72921762/9412ac7b-b206-42d3-bf25-02c1ec2b9763)
+
