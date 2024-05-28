@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "340094353356",
+    "project_id": "basketco-5b3c2",
+    "storage_bucket": "basketco-5b3c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340094353356:android:022865f54b26aecf4d6769",
+        "android_client_info": {
+          "package_name": "com.example.basketco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtP45AaLXAggQzTzbP4o2piBQe19ZPjOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
