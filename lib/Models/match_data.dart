@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MatchData {
   final String? id;
   final String? waktu;
@@ -15,25 +17,26 @@ class MatchData {
   final String? jam;
 
   MatchData({
-    required this.id,
-    required this.waktu,
-    required this.venue,
-    required this.terang,
-    required this.gelap,
-    required this.KU,
-    required this.pool,
-    required this.terangPemain,
-    required this.gelapPemain,
-    required this.terangId,
-    required this.gelapId,
-    required this.tanggalPlain,
-    required this.tanggal,
-    required this.jam,
+    this.id,
+    this.waktu,
+    this.venue,
+    this.terang,
+    this.gelap,
+    this.KU,
+    this.pool,
+    this.terangPemain,
+    this.gelapPemain,
+    this.terangId,
+    this.gelapId,
+    this.tanggalPlain,
+    this.tanggal,
+    this.jam,
   });
 
-  factory MatchData.fromJson(Map<String, dynamic> json) {
+  factory MatchData.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> json = doc.data() as Map<String, dynamic>;
     return MatchData(
-      id: json['id'],
+      id: doc.id,
       waktu: json['waktu'],
       venue: json['venue'],
       terang: json['terang'],
@@ -49,29 +52,23 @@ class MatchData {
       jam: json['jam'],
     );
   }
-}
 
-class ApiResponse {
-  final bool status;
-  final String message;
-  final List<MatchData> data;
-
-  ApiResponse({
-    required this.status,
-    required this.message,
-    required this.data,
-  });
-
-  factory ApiResponse.fromJson(Map<String, dynamic> json) {
-    List<dynamic> dataList = json['data'];
-    List<MatchData> matchDataList = dataList
-        .map((data) => MatchData.fromJson(data))
-        .toList();
-
-    return ApiResponse(
-      status: json['status'],
-      message: json['message'],
-      data: matchDataList,
-    );
+  Map<String, dynamic> toJson() {
+    return {
+      'waktu': waktu,
+      'venue': venue,
+      'terang': terang,
+      'gelap': gelap,
+      'KU': KU,
+      'pool': pool,
+      'terang_pemain': terangPemain,
+      'gelap_pemain': gelapPemain,
+      'terang_id': terangId,
+      'gelap_id': gelapId,
+      'tanggal_plain': tanggalPlain,
+      'tanggal': tanggal,
+      'jam': jam,
+      'timestamp': Timestamp.now(),
+    };
   }
 }

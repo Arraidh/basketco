@@ -5,6 +5,7 @@ import 'package:basketco/Models/match_data.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:date_field/date_field.dart';
+import 'package:basketco/Service/match_firestore.dart';
 
 import 'dart:core';
 import 'package:intl/intl.dart';
@@ -17,6 +18,8 @@ class ConfigurationPage extends StatefulWidget {
 }
 
 class _ConfigurationPageState extends State<ConfigurationPage> {
+
+  final FirestoreService _firestoreService = FirestoreService();
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _jerseyController = TextEditingController();
@@ -38,6 +41,51 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
   Color _selectedColor2 = Colors.white;
   Color _selectedColor3 = Colors.red;
   Color _selectedColor4 = Colors.black;
+
+  void _saveMatch() {
+    final match = MatchData(
+      waktu: DateFormat('dd/MM/yyyy').format(_selectedDate!) + ' ${_selectedtime.format(context)}',
+      venue: _venueController.text,
+      terang: _nameController.text,
+      gelap: _nameController2.text,
+      KU: _quarterController.text,
+      pool: _periodtimesController.text,
+      terangPemain: _jerseyController.text,
+      gelapPemain: _jerseyController2.text,
+      terangId: '1',  // Example ID, adjust accordingly
+      gelapId: '2',  // Example ID, adjust accordingly
+      tanggalPlain: _selectedDate.toString(),
+      tanggal: DateFormat('dd/MM/yyyy').format(_selectedDate!),
+      jam: _selectedtime.format(context),
+    );
+
+    _firestoreService.addMatch(match).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Match saved!')));
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to save match: $error')));
+    });
+  }
+
+  void _updateMatch(String docID) {
+    final match = MatchData(
+      // Similar structure as _saveMatch but with updated data
+    );
+
+    _firestoreService.updateMatch(docID, match).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Match updated!')));
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to update match: $error')));
+    });
+  }
+
+  void _deleteMatch(String docID) {
+    _firestoreService.deleteMatch(docID).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Match deleted!')));
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to delete match: $error')));
+    });
+  }
+
 
   void _selectTime() async {
     final TimeOfDay? newTime = await showTimePicker(
@@ -561,49 +609,60 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+//                   ElevatedButton(
+//                     onPressed: () {
+// // Mengisi data dalam configurationModel menggunakan TextEditingController
+//                       bool isButtonClicked = false;
+//                       setState(() {
+//                         isButtonClicked = !isButtonClicked;
+//                       });
+//
+//                       String name = _nameController.text;
+//                       String jersey = _jerseyController.text;
+//                       String colors = _colorsController.text;
+//                       String name2 = _nameController2.text;
+//                       String jersey2 = _jerseyController2.text;
+//                       String colors2 = _colorsController2.text;
+//                       String periods = _periodtimesController.text;
+//                       //int time = int.tryParse(configuration.periodtimesController.text) ?? 0;
+//                       int? time = int.tryParse(periods);
+//                       // print('Name $name');
+//                       // print('Jersey # $jersey');
+//                       // print('BG/FG Colors $colors');
+//                       // configuration.updateData(name, jersey, colors, name2, jersey2, colors2, time!);
+//
+//                       Navigator.of(context).pop();
+//                       Navigator.of(context).push(
+//                         MaterialPageRoute(
+//                           builder: (context) => CalculatorPage(
+//                             // selectedColor1: _selectedColor1,
+//                             // selectedColor2: _selectedColor2,
+//                             // selectedColor3: _selectedColor3,
+//                             // selectedColor4: _selectedColor4,
+//                             // token: token,
+//                             // matchData: matchData,
+//                             // data: configuration.configurationData,
+//                             // // id: widget.id!,
+//                             // selectedDate: selectedDate,
+//                             // activeTerang: [],
+//                             // activeGelap: [],
+//                           ),
+//                         ),
+//                       );
+//                     },
+//                     style: ElevatedButton.styleFrom(
+//                       padding: EdgeInsets.symmetric(horizontal: 60), backgroundColor: BasketcoColors.green,
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(4),
+//                       ),
+//                     ),
+//                     child: Text('Save', style: TextStyle(fontSize: 20, color: Colors.white)),
+//                   ),
                   ElevatedButton(
-                    onPressed: () {
-// Mengisi data dalam configurationModel menggunakan TextEditingController
-                      bool isButtonClicked = false;
-                      setState(() {
-                        isButtonClicked = !isButtonClicked;
-                      });
-
-                      String name = _nameController.text;
-                      String jersey = _jerseyController.text;
-                      String colors = _colorsController.text;
-                      String name2 = _nameController2.text;
-                      String jersey2 = _jerseyController2.text;
-                      String colors2 = _colorsController2.text;
-                      String periods = _periodtimesController.text;
-                      //int time = int.tryParse(configuration.periodtimesController.text) ?? 0;
-                      int? time = int.tryParse(periods);
-                      // print('Name $name');
-                      // print('Jersey # $jersey');
-                      // print('BG/FG Colors $colors');
-                      // configuration.updateData(name, jersey, colors, name2, jersey2, colors2, time!);
-
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => CalculatorPage(
-                            // selectedColor1: _selectedColor1,
-                            // selectedColor2: _selectedColor2,
-                            // selectedColor3: _selectedColor3,
-                            // selectedColor4: _selectedColor4,
-                            // token: token,
-                            // matchData: matchData,
-                            // data: configuration.configurationData,
-                            // // id: widget.id!,
-                            // selectedDate: selectedDate,
-                            // activeTerang: [],
-                            // activeGelap: [],
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: _saveMatch,
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 60), backgroundColor: BasketcoColors.green,
+                      padding: EdgeInsets.symmetric(horizontal: 60),
+                      backgroundColor: BasketcoColors.green,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),
