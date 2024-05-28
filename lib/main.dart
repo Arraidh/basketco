@@ -1,5 +1,6 @@
 import 'package:basketco/Pages/Calculator.dart';
 import 'package:basketco/Pages/Configuration.dart';
+import 'package:basketco/Pages/ListMatch.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ConfigurationPage(),
+      home: const ListMatchPage(),
     );
   }
 }
