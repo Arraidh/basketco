@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:basketco/Utils/Colors.dart';
 import 'package:basketco/Pages/Calculator.dart';
 import 'package:basketco/Models/match_data.dart';
+import 'package:basketco/Service/match_firestore.dart';
 
 class ListMatchPage extends StatefulWidget {
   const ListMatchPage({Key? key}) : super(key: key);
@@ -11,12 +12,31 @@ class ListMatchPage extends StatefulWidget {
 }
 
 class _ListMatchPageState extends State<ListMatchPage> {
+  FirestoreService _firestoreService = FirestoreService();
+
   List<Color> _selectedColors = [
     Colors.blue,
     Colors.white,
     Colors.red,
     Colors.black,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData(); // Panggil fungsi untuk memuat data saat halaman pertama kali dibuat
+  }
+
+  void fetchData() {
+    FirestoreService _firestoreService = FirestoreService();
+    _firestoreService.getMatchStream().listen((matches) {
+      setState(() {
+        matchDataList = matches;
+      });
+    }, onError: (error) {
+      print("Failed to fetch matches: $error");
+    });
+  }
 
   // late Kalkulator myKalkulator;
   String selectedValue = '2023-06-25';
@@ -37,6 +57,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
     // fetchData(selectedValue);
   }
 
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -44,8 +65,16 @@ class _ListMatchPageState extends State<ListMatchPage> {
 
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          'Basketco',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: BasketcoColors.midBackground,
-        leading: Padding(padding: EdgeInsets.only(left: 0),),
+        leading: Padding(padding: EdgeInsets.only(left: 10),),
         actions: [
           // SvgPicture.asset(
           //   'assets/image/logo-stat.svg',
@@ -124,12 +153,22 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
-                                            // Navigasi ke layar WebView saat tombol ditekan
-                                            // Navigator.of(context).push(
-                                            //   MaterialPageRoute(
-                                            //     builder: (context) => LogWebView(),
-                                            //   ),
-                                            // );
+                                            // Menghapus data saat tombol delete ditekan
+                                            final matchID = matchDataList[index].id;
+                                            if (matchID != null) {
+                                              _firestoreService.deleteMatch(matchID)
+                                                  .then((_) {
+                                                setState(() {
+                                                  // Setelah berhasil dihapus, perbarui tampilan dengan menghapus item dari daftar matchDataList
+                                                  matchDataList.removeAt(index);
+                                                });
+                                              })
+                                                  .catchError((error) {
+                                                print("Failed to delete match: $error");
+                                              });
+                                            } else {
+                                              print("Match ID is null, cannot delete.");
+                                            }
                                           },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: BasketcoColors.grey,
@@ -139,7 +178,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                                           ),
                                           child: const Icon(
-                                            Icons.sort,
+                                            Icons.delete,
                                             size: 24,
                                             color: Colors.white,
                                           ),

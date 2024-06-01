@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:340094353356:android:1b7a1e85cb7f92a54d6769",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtP45AaLXAggQzTzbP4o2piBQe19ZPjOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:340094353356:android:022865f54b26aecf4d6769",
         "android_client_info": {
           "package_name": "com.example.basketco"

@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'basketco-5b3c2.appspot.com',
     measurementId: 'G-0GSMFZK90H',
   );
+
 }
