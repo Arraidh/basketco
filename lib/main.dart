@@ -41,7 +41,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ListMatchPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => AuthPage(),
+        // '/auth': (context) => AuthPage(),
+        '/configuration': (context) => ConfigurationPage(),
+      },
     );
   }
 }

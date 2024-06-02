@@ -1,3 +1,5 @@
+import 'package:basketco/Pages/auth_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:basketco/Utils/Colors.dart';
 import 'package:basketco/Pages/Calculator.dart';
@@ -13,6 +15,11 @@ class ListMatchPage extends StatefulWidget {
 
 class _ListMatchPageState extends State<ListMatchPage> {
   FirestoreService _firestoreService = FirestoreService();
+
+  // sign user out method
+  void signUserOut() {
+    FirebaseAuth.instance.signOut();
+  }
 
   List<Color> _selectedColors = [
     Colors.blue,
@@ -63,6 +70,8 @@ class _ListMatchPageState extends State<ListMatchPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    print(FirebaseAuth.instance.currentUser);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -99,6 +108,22 @@ class _ListMatchPageState extends State<ListMatchPage> {
             }).toList(),
             onChanged: onDropdownChanged,
           ),
+          Builder(
+            builder: (context) {
+              if (FirebaseAuth.instance.currentUser != null) {
+
+                return IconButton(
+                  onPressed: signUserOut,
+                  icon: Icon(Icons.logout),
+                );
+              } else {
+                return ElevatedButton(
+                    onPressed: () {Navigator.pushNamed(context, '/auth');},
+                    child: const Text("Masuk"));
+              }
+            },
+          ),
+
         ],
       ),
       body: Stack(
@@ -274,6 +299,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) => CalculatorPage(
+                                                  id: matchData.id,
                                                   // token: widget.token,
                                                   // matchData: widget.matchData,
                                                   // selectedColor1: Colors.white,

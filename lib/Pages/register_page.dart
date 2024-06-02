@@ -84,6 +84,18 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  // TODO: MAKE ROLE BASED CONTROL
+  // @override
+  // void initState() {
+  //   final user = FirebaseAuth.instance.currentUser != null ?  FirebaseAuth.instance.currentUser : null;
+  //   if(user != null ){
+  //     final emailPrefix = user.email;
+  //     print("asu");
+  //     print(emailPrefix);
+  //   }
+  // }
+
+
 
 
   @override
