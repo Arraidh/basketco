@@ -20,6 +20,20 @@ class FirestoreService {
     });
   }
 
+  Future<MatchData?> getMatchPlayer(String matchId) async {
+    try {
+      DocumentSnapshot doc = await matches.doc(matchId).get();
+      if (doc.exists) {
+        return MatchData.fromFirestore(doc);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching match data: $e');
+      return null;
+    }
+  }
+
   Future<void> updateMatch(String docID, MatchData match) {
     return matches.doc(docID).update(match.toJson());
   }

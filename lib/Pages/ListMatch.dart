@@ -299,7 +299,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) => CalculatorPage(
-                                                  id: matchData.id,
+                                                  // id: matchData.id,
                                                   // token: widget.token,
                                                   // matchData: widget.matchData,
                                                   // selectedColor1: Colors.white,

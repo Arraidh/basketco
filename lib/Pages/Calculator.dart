@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:basketco/State/player_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:basketco/Utils/Colors.dart';
@@ -7,6 +8,7 @@ import 'package:basketco/Component/reusable_button1.dart';
 import 'package:basketco/Component/reusable_button_calc.dart';
 // import 'package:vibration/vibration.dart';
 import 'package:basketco/Models/match_data.dart';
+import 'package:provider/provider.dart';
 
 class CalculatorPage extends StatefulWidget {
   const CalculatorPage({Key? key}) : super(key: key);
@@ -286,6 +288,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final playerProvider = Provider.of<MatchProvider>(context);
+    final terangMain = playerProvider.activeTerang;
+    final gelapMain = playerProvider.activeGelap;
+
     return Scaffold(
       backgroundColor: BasketcoColors.darkBackground,
       appBar:  AppBar(
@@ -394,11 +400,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => Subtitution(token: widget.token, matchData: widget.matchData, selectedDate: widget.selectedDate,),
-                      //   ),
-                      // );
+                      Navigator.pushNamed(context, '/subtitution');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: BasketcoColors.yellow,
