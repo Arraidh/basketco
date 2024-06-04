@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:basketco/Models/calculator.dart';
+import 'package:basketco/Service/match_firestore.dart';
 import 'package:basketco/State/player_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ import 'package:basketco/Component/reusable_button_calc.dart';
 import 'package:basketco/Models/match_data.dart';
 import 'package:provider/provider.dart';
 import 'package:basketco/Pages/Subtitution.dart';
+import 'package:string_validator/string_validator.dart';
 
 class CalculatorPage extends StatefulWidget {
   final MatchData matchData;
@@ -22,6 +25,8 @@ class CalculatorPage extends StatefulWidget {
 }
 
 class _CalculatorPageState extends State<CalculatorPage> {
+
+  final FirestoreService _firestoreService = FirestoreService();
 
   // sign user out method
   void signUserOut() {
@@ -57,13 +62,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
   String combinedValue = '';
   String? gelapTerang1;
   String? namaTim;
-  late final MatchData matchData;
+  // late final MatchData matchData;
 
   //Player Handler
   void _handleButtonPressNumber(String value, String gelapTerang) {
 
     gelapTerang1 = gelapTerang;
-    namaTim = (gelapTerang == 'terang') ? '${matchData.terang}' : '${matchData.gelap}';
+    namaTim = (gelapTerang == 'terang') ? '${widget.matchData.terang}' : '${widget.matchData.gelap}';
     combinedValue = '$namaTim #$value';
 
     setState(() {
@@ -227,6 +232,18 @@ class _CalculatorPageState extends State<CalculatorPage> {
   int _lastElapsedTime = 0;
   String option = '';
 
+  void _addCalculator(String? docID,Calculator submittedData) {
+
+
+
+
+    _firestoreService.updateCalculatorMatch(docID, submittedData).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Match updated!')));
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to update match: $error')));
+    });
+  }
+
   void _handleOkButtonPress() {
 
     //Querter
@@ -257,13 +274,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       _lastElapsedTime = _start;
       // sendDataToAPI();
 
-      // if(selectedValues.isNotEmpty || selectedValues2.isNotEmpty) {
-      //   //isOk = false;
-      //   nomor = '';
-      //   action = '';
-      //   quarter = '';
-      //   klub = '';
-      // }
+
       if(!isOk){
         if(selectedValues.isNotEmpty || selectedValues2.isNotEmpty) {
           // selectedValues2.clear();
@@ -286,6 +297,63 @@ class _CalculatorPageState extends State<CalculatorPage> {
         print('Selisih waktu: ${_formatTime(elapsedMinutes)}');
       }
     });
+
+    //quarter - STRING
+    print("Quarter" + option);
+
+    //Time in second - INT
+    print("Time in Second");
+    print(_lastElapsedTime);
+
+    //pemain
+    print("Team Player " + selectedValues[0]);
+
+    //action
+    print("Action Number" + value1);
+
+
+    //EXTRACT TEAM AND ACTION
+    List<String> playerDetails = selectedValues[0].split(' #');
+    String tim = playerDetails[0];
+    String nomorPunggung = playerDetails[1];
+    List<String> actionDetails = value1.split('+');
+    String? namaAction = actionDetails[0];
+    int actionValue = 0;
+    if(actionDetails.length > 1){
+      actionValue = int.parse(actionDetails[1]);
+    }
+    // namaAction = actionValue != 0 ? actionDetails[0] : actionDetails.join();
+
+
+    // Creating the object
+    Map<String, dynamic> obj = {
+      "quarter": option,
+      "time": _lastElapsedTime,
+      "tim": tim,
+      "nomor_punggung": nomorPunggung,
+      "action": {
+        "nama": namaAction,
+        "value": actionValue
+      }
+    };
+
+    print(nomorPunggung);
+
+    final calculatorAction = CalculatorAction(nama: namaAction, value: actionValue);
+
+    final createCalculatorData = Calculator(
+        quarter: option,
+        time: _lastElapsedTime,
+        tim: tim,
+        nomorPunggung: nomorPunggung,
+        action: calculatorAction
+    );
+
+    _addCalculator(widget.matchData.id, createCalculatorData);
+
+
+
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Data terkirim'),
@@ -301,8 +369,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
     final playerProvider = Provider.of<MatchProvider>(context);
     final terangMain = playerProvider.activeTerang;
     final gelapMain = playerProvider.activeGelap;
-    print('Selected Value1: ${selectedValues}');
-    print('Selected Value2: ${selectedValues2}');
+    // print('Selected Value1: ${selectedValues}');
+    // print('Selected Value2: ${selectedValues2}');
+    //
+    // print('Pemain terang: ${terangMain}');
+    // print(_minutes);
+    // print(_seconds);
 
     return Scaffold(
       backgroundColor: BasketcoColors.darkBackground,

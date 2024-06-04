@@ -1,3 +1,4 @@
+import 'package:basketco/Models/calculator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:basketco/Models/match_data.dart'; // Import MatchData
 
@@ -36,6 +37,10 @@ class FirestoreService {
 
   Future<void> updateMatch(String docID, MatchData match) {
     return matches.doc(docID).update(match.toJson());
+  }
+
+  Future<void> updateCalculatorMatch(String? docID, Calculator calculator) {
+    return matches.doc(docID).update({"calculator": FieldValue.arrayUnion([calculator.toJson()])});
   }
 
   Future<void> deleteMatch(String docID) {

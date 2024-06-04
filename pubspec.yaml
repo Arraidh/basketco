@@ -42,6 +42,7 @@ dependencies:
   firebase_auth: ^4.19.6
   flutter_svg: ^2.0.10+1
   provider: ^6.1.2
+  string_validator: ^1.1.0
 
 dev_dependencies:
   flutter_test:
