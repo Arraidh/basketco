@@ -21,4 +21,11 @@ class MatchProvider with ChangeNotifier {
   bool isGelapActive(String angka) {
     return activeGelap.contains(angka);
   }
+
+  void resetPlayer(){
+    activeGelap.clear();
+    activeTerang.clear();
+
+    notifyListeners();
+  }
 }

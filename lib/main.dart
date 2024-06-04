@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => AuthPage(),
           '/configuration': (context) => ConfigurationPage(),
-          '/subtitution': (context) => SubtitutionPage(),
+          // '/subtitution': (context) => SubtitutionPage(matchData: ModalRoute.of(context)!.settings.arguments as MatchData),
           '/calculator': (context) => CalculatorPage(matchData: ModalRoute.of(context)!.settings.arguments as MatchData),
           '/list': (context) => ListMatchPage(),
         },

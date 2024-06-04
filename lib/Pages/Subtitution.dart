@@ -8,7 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SubtitutionPage extends StatefulWidget {
-  const SubtitutionPage({Key? key}) : super(key: key);
+  final MatchData matchData;
+
+  const SubtitutionPage({
+    Key? key,
+    required this.matchData
+  }) : super(key: key);
+
 
   @override
   State<SubtitutionPage> createState() => _SubtitutionPageState();
@@ -29,11 +35,11 @@ class _SubtitutionPageState extends State<SubtitutionPage> {
 
   Future<void> _fetchMatchData() async {
     final data = await matchFirestoreService.getMatchPlayer('Kks4VotE1PWTWI7weQFe'); // Sesuaikan dengan match ID yang diinginkan
-    if (data != null) {
+    if (widget.matchData.terangPemain != null && widget.matchData.gelapPemain != null) {
       setState(() {
-        matchData = data;
-        angkaList = data.terangPemain?.split(',') ?? [];
-        angkaList2 = data.gelapPemain?.split(',') ?? [];
+        matchData = widget.matchData;
+        angkaList = widget.matchData.terangPemain?.split(',') ?? [];
+        angkaList2 = widget.matchData.gelapPemain?.split(',') ?? [];
       });
     }
   }
@@ -171,6 +177,10 @@ class _SubtitutionPageState extends State<SubtitutionPage> {
   }
 
   void _handleOkPressed() {
-    Navigator.of(context).pushNamed('/calculator');
+    Navigator.pushNamed(
+      context,
+      '/calculator',
+      arguments: matchData,
+    );
   }
 }

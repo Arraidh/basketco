@@ -9,6 +9,7 @@ import 'package:basketco/Component/reusable_button_calc.dart';
 // import 'package:vibration/vibration.dart';
 import 'package:basketco/Models/match_data.dart';
 import 'package:provider/provider.dart';
+import 'package:basketco/Pages/Subtitution.dart';
 
 class CalculatorPage extends StatefulWidget {
   final MatchData matchData;
@@ -57,6 +58,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
   String? gelapTerang1;
   String? namaTim;
   late final MatchData matchData;
+
+  //Player Handler
   void _handleButtonPressNumber(String value, String gelapTerang) {
 
     gelapTerang1 = gelapTerang;
@@ -123,6 +126,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
+  //QUARTER HANDLER
   String selectedOption = 'Q1';
   void _handleSelection(String value) {
     setState(() {
@@ -225,11 +229,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   void _handleOkButtonPress() {
 
+    //Querter
     option = selectedOption;
 
     setState(() {
       if (!isOk) {
         // Tombol OK ditekan pertama kali
+        //Waktu
         startMinutes = _minutes;
         startSeconds = _seconds;
         //isOk = true;
@@ -289,12 +295,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
     final playerProvider = Provider.of<MatchProvider>(context);
     final terangMain = playerProvider.activeTerang;
     final gelapMain = playerProvider.activeGelap;
-    print('Match Data ID: ${widget.matchData.id}');
+    print('Selected Value1: ${selectedValues}');
+    print('Selected Value2: ${selectedValues2}');
 
     return Scaffold(
       backgroundColor: BasketcoColors.darkBackground,
@@ -302,7 +310,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
         backgroundColor: BasketcoColors.midBackground,
         leading: GestureDetector(
           onTap: () {
-            Navigator.of(context).pop(); // Fungsi untuk kembali
+            Provider.of<MatchProvider>(context, listen: false).resetPlayer();
+            Navigator.pushNamed(context, "/list"); // Fungsi untuk kembali
           },
           child: const Icon(
             Icons.arrow_back_ios,
@@ -404,7 +413,16 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/subtitution');
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) =>
+                              SubtitutionPage(
+                                matchData: widget.matchData,
+                              ))
+                      );
+                      // Navigator.pushNamed(
+                      //   context,
+                      //   '/subtitution',
+                      //   arguments: matchData,);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: BasketcoColors.yellow,
