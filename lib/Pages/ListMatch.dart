@@ -282,6 +282,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
+                                            // Navigator.pushNamed(context, '/configuration', arguments: matchData,);
                                             // String? id = matchData.id;
                                             // Navigator.push(
                                             //   context,
@@ -311,35 +312,57 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                           ),
                                         ),
                                         SizedBox(width: 8),
+                                        // ElevatedButton(
+                                        //   onPressed: () {
+                                        //     String? id = matchData.id;
+                                        //     // SchedulerBinding.instance.addPostFrameCallback((_) {
+                                        //     //
+                                        //     // });
+                                        //     final result = Navigator.push(
+                                        //       context,
+                                        //       MaterialPageRoute(
+                                        //         builder: (context) => CalculatorPage(
+                                        //           // id: matchData.id,
+                                        //           // token: widget.token,
+                                        //           // matchData: widget.matchData,
+                                        //           // selectedColor1: Colors.white,
+                                        //           // selectedColor2: Colors.blue,
+                                        //           // selectedColor3: Colors.red,
+                                        //           // selectedColor4: Colors.black, data: {}, selectedDate: selectedValue, activeTerang: widget.activeTerang, activeGelap: widget.activeGelap,
+                                        //           // onColorsChanged: (colors) {
+                                        //           //   setState(() {
+                                        //           //     _selectedColors = colors;
+                                        //           //   });
+                                        //           //   Navigator.of(context).pop();
+                                        //           // },
+                                        //         ),
+                                        //       ),
+                                        //     );
+                                        //   },
+                                        //   style: ElevatedButton.styleFrom(
+                                        //     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), backgroundColor: BasketcoColors.grey,
+                                        //     shape: RoundedRectangleBorder(
+                                        //       borderRadius: BorderRadius.circular(4),
+                                        //     ),
+                                        //   ),
+                                        //   child: const Icon(
+                                        //     Icons.play_arrow,
+                                        //     size: 24,
+                                        //     color: Colors.white,
+                                        //   ),
+                                        // ),
                                         ElevatedButton(
                                           onPressed: () {
-                                            String? id = matchData.id;
-                                            // SchedulerBinding.instance.addPostFrameCallback((_) {
-                                            //
-                                            // });
-                                            final result = Navigator.push(
+                                            Navigator.pushNamed(
                                               context,
-                                              MaterialPageRoute(
-                                                builder: (context) => CalculatorPage(
-                                                  // id: matchData.id,
-                                                  // token: widget.token,
-                                                  // matchData: widget.matchData,
-                                                  // selectedColor1: Colors.white,
-                                                  // selectedColor2: Colors.blue,
-                                                  // selectedColor3: Colors.red,
-                                                  // selectedColor4: Colors.black, data: {}, selectedDate: selectedValue, activeTerang: widget.activeTerang, activeGelap: widget.activeGelap,
-                                                  // onColorsChanged: (colors) {
-                                                  //   setState(() {
-                                                  //     _selectedColors = colors;
-                                                  //   });
-                                                  //   Navigator.of(context).pop();
-                                                  // },
-                                                ),
-                                              ),
+                                              '/calculator',
+                                              arguments: matchData,
                                             );
+                                            print('Navigating to CalculatorPage with matchData: ${matchData.id}');
                                           },
                                           style: ElevatedButton.styleFrom(
-                                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), backgroundColor: BasketcoColors.grey,
+                                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                            backgroundColor: BasketcoColors.grey,
                                             shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(4),
                                             ),
@@ -350,6 +373,9 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                             color: Colors.white,
                                           ),
                                         ),
+
+
+
                                         SizedBox(width: 12),
                                       ],
                                     ),
@@ -373,6 +399,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
               child: FloatingActionButton(
                 backgroundColor: BasketcoColors.green,
                 onPressed: () {
+                  Navigator.pushNamed(context, '/configuration');
                   // Navigator.push(
                   //   context,
                   //   MaterialPageRoute(

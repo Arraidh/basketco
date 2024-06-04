@@ -3,6 +3,7 @@ import 'package:basketco/Pages/Configuration.dart';
 import 'package:basketco/Pages/ListMatch.dart';
 import 'package:basketco/Pages/Subtitution.dart';
 import 'package:basketco/Pages/auth_page.dart';
+import 'package:basketco/Models/match_data.dart';
 import 'package:basketco/State/player_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,10 +29,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         initialRoute: '/',
         routes: {
-          '/': (context) => ListMatchPage(),
+          '/': (context) => AuthPage(),
           '/configuration': (context) => ConfigurationPage(),
           '/subtitution': (context) => SubtitutionPage(),
-          '/calculator': (context) => CalculatorPage(),
+          '/calculator': (context) => CalculatorPage(matchData: ModalRoute.of(context)!.settings.arguments as MatchData),
           '/list': (context) => ListMatchPage(),
         },
       ),

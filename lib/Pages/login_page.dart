@@ -1,9 +1,12 @@
+import 'package:basketco/Utils/Colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:basketco/Component/my_button.dart';
 import 'package:basketco/Component/my_textfield.dart';
 import 'package:basketco/Component/square_tile.dart';
+
+import 'forgot_pw_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -75,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: BasketcoColors.lightBackground,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -88,6 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                 const Icon(
                   Icons.lock,
                   size: 100,
+                  color: Colors.white,
                 ),
 
                 const SizedBox(height: 50),
@@ -96,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                 Text(
                   'Welcome back you\'ve been missed!',
                   style: TextStyle(
-                    color: Colors.grey[700],
+                    color: Colors.white,
                     fontSize: 16,
                   ),
                 ),
@@ -127,9 +131,24 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        'Forgot Password?',
-                        style: TextStyle(color: Colors.grey[600]),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) {
+                                    return ForgotPasswordPage();
+                                  },
+                              ),
+                          );
+                        },
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                              color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -141,6 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                 MyButton(
                   onTap: signUserIn,
                   text: "Sign In",
+                  color: BasketcoColors.darkBackground
                 ),
 
                 const SizedBox(height: 50),
@@ -153,20 +173,20 @@ class _LoginPageState extends State<LoginPage> {
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
-                          color: Colors.grey[400],
+                          color: Colors.white,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text(
                           'Or continue with',
-                          style: TextStyle(color: Colors.grey[700]),
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
-                          color: Colors.grey[400],
+                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -197,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text(
                       'Not a member?',
-                      style: TextStyle(color: Colors.grey[700]),
+                      style: TextStyle(color: Colors.white),
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(

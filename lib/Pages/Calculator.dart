@@ -11,7 +11,10 @@ import 'package:basketco/Models/match_data.dart';
 import 'package:provider/provider.dart';
 
 class CalculatorPage extends StatefulWidget {
-  const CalculatorPage({Key? key}) : super(key: key);
+  final MatchData matchData;
+
+  CalculatorPage({required this.matchData});
+  // const CalculatorPage({Key? key}) : super(key: key);
 
   @override
   State<CalculatorPage> createState() => _CalculatorPageState();
@@ -291,6 +294,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     final playerProvider = Provider.of<MatchProvider>(context);
     final terangMain = playerProvider.activeTerang;
     final gelapMain = playerProvider.activeGelap;
+    print('Match Data ID: ${widget.matchData.id}');
 
     return Scaffold(
       backgroundColor: BasketcoColors.darkBackground,

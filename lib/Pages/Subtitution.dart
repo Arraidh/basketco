@@ -28,7 +28,7 @@ class _SubtitutionPageState extends State<SubtitutionPage> {
   }
 
   Future<void> _fetchMatchData() async {
-    final data = await matchFirestoreService.getMatchPlayer('7nmmMoohUrEGKjRfpBfP'); // Sesuaikan dengan match ID yang diinginkan
+    final data = await matchFirestoreService.getMatchPlayer('Kks4VotE1PWTWI7weQFe'); // Sesuaikan dengan match ID yang diinginkan
     if (data != null) {
       setState(() {
         matchData = data;
