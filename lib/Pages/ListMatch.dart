@@ -239,6 +239,11 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                             //     builder: (context) => StatistikWebView(),
                                             //   ),
                                             // );
+                                            Navigator.pushNamed(
+                                              context,
+                                              '/statistic',
+                                              arguments: matchData,
+                                            );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), backgroundColor: BasketcoColors.grey,
@@ -298,11 +303,11 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                             //     ),
                                             //   ),
                                             // );
-                                            Navigator.pushNamed(
-                                              context,
-                                              '/statistic',
-                                              arguments: matchData,
-                                            );
+                                            // Navigator.pushNamed(
+                                            //   context,
+                                            //   '/statistic',
+                                            //   arguments: matchData,
+                                            // );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), backgroundColor: BasketcoColors.grey,
@@ -379,8 +384,6 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                           ),
                                         ),
 
-
-
                                         SizedBox(width: 12),
                                       ],
                                     ),
@@ -399,33 +402,44 @@ class _ListMatchPageState extends State<ListMatchPage> {
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: FloatingActionButton(
-                backgroundColor: BasketcoColors.green,
-                onPressed: () {
-                  Navigator.pushNamed(context, '/configuration');
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => InputConfiguration(
-                  //       token: widget.token,
-                  //       matchData: widget.matchData,
-                  //       initialColors: _selectedColors,
-                  //       onColorsChanged: (colors) {
-                  //         setState(() {
-                  //           _selectedColors = colors;
-                  //         });
-                  //         Navigator.of(context).pop();
-                  //       }, selectedDate: '',
-                  //     ),
-                  //   ),
-                  // );
-                },
-                child: Icon(Icons.add, size: 35, color: BasketcoColors.white),
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: FloatingActionButton(
+                    backgroundColor: BasketcoColors.green,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/listteam');
+                    },
+                    child: Row(
+                      children: [
+                         Text(
+                          'TEAM',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: BasketcoColors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: FloatingActionButton(
+                    backgroundColor: BasketcoColors.green,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/configuration');
+                    },
+                    child: Icon(Icons.add, size: 35, color: BasketcoColors.white),
+                  ),
+                ),
+              ],
             ),
           ),
+
         ],
       ),
     );
