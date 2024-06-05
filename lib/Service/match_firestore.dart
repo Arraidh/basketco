@@ -43,6 +43,36 @@ class FirestoreService {
     return matches.doc(docID).update({"calculator": FieldValue.arrayUnion([calculator.toJson()])});
   }
 
+  Future<List<Calculator>> getCalculatorsFromMatch(String matchId) async {
+    try {
+      DocumentSnapshot doc = await matches.doc(matchId).get();
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        final calculatorList = data['calculator'] as List<dynamic>? ?? [];
+
+        return calculatorList.map((calculatorData) {
+          final actionData = calculatorData['action'] as Map<String, dynamic>?;
+          final action = actionData != null
+              ? CalculatorAction.fromJson(actionData)
+              : CalculatorAction.empty();
+
+          return Calculator(
+            action: action,
+            nomorPunggung: calculatorData['nomor_punggung'] as String? ?? '',
+            quarter: calculatorData['quarter'] as String? ?? '',
+            tim: calculatorData['tim'] as String? ?? '',
+            time: calculatorData['time'] as int? ?? 0,
+          );
+        }).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print('Error fetching calculator data: $e');
+      return [];
+    }
+  }
+
   Future<void> deleteMatch(String docID) {
     return matches.doc(docID).delete();
   }

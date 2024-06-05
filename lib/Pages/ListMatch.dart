@@ -298,6 +298,11 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                             //     ),
                                             //   ),
                                             // );
+                                            Navigator.pushNamed(
+                                              context,
+                                              '/statistic',
+                                              arguments: matchData,
+                                            );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), backgroundColor: BasketcoColors.grey,
