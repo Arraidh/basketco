@@ -166,7 +166,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 MyButton(
                   onTap: signUserUp,
                   text: "Sign Up",
-                  color: BasketcoColors.darkBackground,
+                  color: BasketcoColors.green,
                 ),
 
                 const SizedBox(height: 50),

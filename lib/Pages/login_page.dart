@@ -79,6 +79,24 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: BasketcoColors.lightBackground,
+      appBar: AppBar(
+        backgroundColor: BasketcoColors.lightBackground,
+        // title: Text('Login'),
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop(); // Function to go back
+          },
+          child: Row(
+            children: const [
+              Icon(
+                Icons.arrow_back_ios,
+                size: 24,
+                color: Colors.white,
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -160,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                 MyButton(
                   onTap: signUserIn,
                   text: "Sign In",
-                  color: BasketcoColors.darkBackground
+                  color: BasketcoColors.green
                 ),
 
                 const SizedBox(height: 50),

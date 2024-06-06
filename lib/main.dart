@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => ListMatchPage(),
+          '/auth' : (context) => AuthPage(),
           '/listteam' : (context) => ListTeamPage(),
           '/configuration': (context) => ConfigurationPage(),
           '/teamconfiguration': (context) => TeamConfigurationPage(),

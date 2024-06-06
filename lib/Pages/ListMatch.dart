@@ -176,6 +176,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                     ),
                                     Row(
                                       children: [
+                                        if (FirebaseAuth.instance.currentUser != null)
                                         ElevatedButton(
                                           onPressed: () {
                                             // Menghapus data saat tombol delete ditekan
@@ -285,6 +286,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                     ),
                                     Row(
                                       children: [
+                                        if (FirebaseAuth.instance.currentUser != null)
                                         ElevatedButton(
                                           onPressed: () {
                                             // Navigator.pushNamed(context, '/configuration', arguments: matchData,);
@@ -361,6 +363,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                         //     color: Colors.white,
                                         //   ),
                                         // ),
+                                        if (FirebaseAuth.instance.currentUser != null)
                                         ElevatedButton(
                                           onPressed: () {
                                             Navigator.pushNamed(
@@ -406,6 +409,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                if (FirebaseAuth.instance.currentUser != null)
                 Padding(
                   padding: EdgeInsets.all(20.0),
                   child: FloatingActionButton(
@@ -426,6 +430,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
                     ),
                   ),
                 ),
+                if (FirebaseAuth.instance.currentUser != null)
                 Padding(
                   padding: EdgeInsets.all(20.0),
                   child: FloatingActionButton(
