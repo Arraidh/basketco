@@ -210,6 +210,33 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                           ),
                                         ),
                                         SizedBox(width: 8),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            // Navigasi ke layar WebView saat tombol ditekan
+                                            // Navigator.of(context).push(
+                                            //   MaterialPageRoute(
+                                            //     builder: (context) => StatistikWebView(),
+                                            //   ),
+                                            // );
+                                            Navigator.pushNamed(
+                                              context,
+                                              '/statistic',
+                                              arguments: matchData,
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), backgroundColor: BasketcoColors.grey,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(4),
+                                            ),
+                                          ),
+                                          child: const Icon(
+                                            Icons.sort,
+                                            size: 24,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
                                         // ElevatedButton(
                                         //   onPressed: () {
                                         //     // Navigasi ke layar WebView saat tombol ditekan
