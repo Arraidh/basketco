@@ -1,5 +1,6 @@
 import 'package:basketco/Pages/Calculator.dart';
 import 'package:basketco/Pages/Configuration.dart';
+import 'package:basketco/Pages/Get_MatchConfiguration.dart';
 import 'package:basketco/Pages/ListMatch.dart';
 import 'package:basketco/Pages/ListTeam.dart';
 import 'package:basketco/Pages/Statistic.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
           // '/subtitution': (context) => SubtitutionPage(matchData: ModalRoute.of(context)!.settings.arguments as MatchData),
           '/calculator': (context) => CalculatorPage(matchData: ModalRoute.of(context)!.settings.arguments as MatchData),
           '/list': (context) => ListMatchPage(),
+          '/getmatch': (context) => GetConfigurationPage(matchData: ModalRoute.of(context)!.settings.arguments as MatchData),
           '/statistic' : (context) => StatisticPage(matchData: ModalRoute.of(context)!.settings.arguments as MatchData),
         },
       ),

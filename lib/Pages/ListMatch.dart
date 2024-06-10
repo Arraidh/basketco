@@ -210,33 +210,33 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                           ),
                                         ),
                                         SizedBox(width: 8),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            // Navigasi ke layar WebView saat tombol ditekan
-                                            // Navigator.of(context).push(
-                                            //   MaterialPageRoute(
-                                            //     builder: (context) => StatistikWebView(),
-                                            //   ),
-                                            // );
-                                            Navigator.pushNamed(
-                                              context,
-                                              '/statistic',
-                                              arguments: matchData,
-                                            );
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), backgroundColor: BasketcoColors.grey,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(4),
-                                            ),
-                                          ),
-                                          child: const Icon(
-                                            Icons.sort,
-                                            size: 24,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        SizedBox(width: 8),
+                                        // ElevatedButton(
+                                        //   onPressed: () {
+                                        //     // Navigasi ke layar WebView saat tombol ditekan
+                                        //     // Navigator.of(context).push(
+                                        //     //   MaterialPageRoute(
+                                        //     //     builder: (context) => StatistikWebView(),
+                                        //     //   ),
+                                        //     // );
+                                        //     Navigator.pushNamed(
+                                        //       context,
+                                        //       '/statistic',
+                                        //       arguments: matchData,
+                                        //     );
+                                        //   },
+                                        //   style: ElevatedButton.styleFrom(
+                                        //     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), backgroundColor: BasketcoColors.grey,
+                                        //     shape: RoundedRectangleBorder(
+                                        //       borderRadius: BorderRadius.circular(4),
+                                        //     ),
+                                        //   ),
+                                        //   child: const Icon(
+                                        //     Icons.sort,
+                                        //     size: 24,
+                                        //     color: Colors.white,
+                                        //   ),
+                                        // ),
+                                        // SizedBox(width: 8),
                                         // ElevatedButton(
                                         //   onPressed: () {
                                         //     // Navigasi ke layar WebView saat tombol ditekan
@@ -332,11 +332,11 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                             //     ),
                                             //   ),
                                             // );
-                                            // Navigator.pushNamed(
-                                            //   context,
-                                            //   '/statistic',
-                                            //   arguments: matchData,
-                                            // );
+                                            Navigator.pushNamed(
+                                              context,
+                                              '/getmatch',
+                                              arguments: matchData,
+                                            );
                                           },
                                           style: ElevatedButton.styleFrom(
                                             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), backgroundColor: BasketcoColors.grey,
@@ -432,46 +432,73 @@ class _ListMatchPageState extends State<ListMatchPage> {
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: Column(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 if (FirebaseAuth.instance.currentUser != null)
-                Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: FloatingActionButton(
-                    backgroundColor: BasketcoColors.green,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/listteam');
-                    },
-                    child: Row(
-                      children: [
-                         Text(
-                          'TEAM',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: BasketcoColors.white,
-                          ),
+                  Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: SizedBox(
+                      width: 100,  // Adjust the width according to your design
+                      child: FloatingActionButton(
+                        backgroundColor: BasketcoColors.blue,
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/listteam');
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.group,
+                              color: BasketcoColors.white,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'TEAM',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: BasketcoColors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
                 if (FirebaseAuth.instance.currentUser != null)
-                Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: FloatingActionButton(
-                    backgroundColor: BasketcoColors.green,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/configuration');
-                    },
-                    child: Icon(Icons.add, size: 35, color: BasketcoColors.white),
+                  Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: SizedBox(
+                      width: 180,  // Adjust the width according to your design
+                      child: FloatingActionButton(
+                        backgroundColor: BasketcoColors.green,
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/configuration');
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add,
+                              color: BasketcoColors.white,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'New Match',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: BasketcoColors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
               ],
             ),
           ),
-
         ],
       ),
     );

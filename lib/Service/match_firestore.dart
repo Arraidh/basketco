@@ -73,7 +73,53 @@ class FirestoreService {
     }
   }
 
+  Stream<List<Calculator>> getCalculatorStreamFromMatch(String matchId) {
+    return matches
+        .doc(matchId)
+        .snapshots()
+        .map((snapshot) {
+      final data = snapshot.data();
+      if (data == null) return [];
+
+      if (data is Map<String, dynamic> && data.containsKey('calculator')) {
+        final calculatorList =
+        (data['calculator'] as List<dynamic>).cast<Map<String, dynamic>>();
+
+        return calculatorList.map((calculatorData) {
+          final actionData = calculatorData['action'] as Map<String, dynamic>?;
+          final action = actionData != null
+              ? CalculatorAction.fromJson(actionData)
+              : CalculatorAction.empty();
+
+          return Calculator(
+            action: action,
+            nomorPunggung: calculatorData['nomor_punggung'] as String? ?? '',
+            quarter: calculatorData['quarter'] as String? ?? '',
+            tim: calculatorData['tim'] as String? ?? '',
+            time: calculatorData['time'] as int? ?? 0,
+          );
+        }).toList();
+      } else {
+        return [];
+      }
+    });
+  }
+
   Future<void> deleteMatch(String docID) {
     return matches.doc(docID).delete();
+  }
+
+  Future<MatchData?> getMatchData(String matchId) async {
+    try {
+      DocumentSnapshot doc = await matches.doc(matchId).get();
+      if (doc.exists) {
+        return MatchData.fromFirestore(doc);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching match data: $e');
+      return null;
+    }
   }
 }
