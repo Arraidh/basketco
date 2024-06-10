@@ -4,6 +4,7 @@ import 'package:basketco/Models/calculator.dart';
 import 'package:basketco/Service/match_firestore.dart';
 import 'package:basketco/State/player_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:basketco/Utils/Colors.dart';
 import 'package:basketco/Component/reusable_button1.dart';
@@ -14,11 +15,13 @@ import 'package:provider/provider.dart';
 import 'package:basketco/Pages/Subtitution.dart';
 import 'package:string_validator/string_validator.dart';
 
+// This is the type used by the popup menu below.
+enum SampleItem { itemOne, itemTwo, itemThree }
+
 class CalculatorPage extends StatefulWidget {
   final MatchData matchData;
 
-  CalculatorPage({required this.matchData});
-  // const CalculatorPage({Key? key}) : super(key: key);
+  const CalculatorPage({Key? key, required this.matchData}) : super(key: key);
 
   @override
   State<CalculatorPage> createState() => _CalculatorPageState();
@@ -27,6 +30,27 @@ class CalculatorPage extends StatefulWidget {
 class _CalculatorPageState extends State<CalculatorPage> {
 
   final FirestoreService _firestoreService = FirestoreService();
+  List<Calculator> calculatorData = [];
+
+  //GET calculator data list
+  void fetchData() async {
+    try {
+      final calculators = await _firestoreService.getCalculatorsFromMatch(widget.matchData.id!);
+
+      setState(() {
+        calculatorData = calculators;
+      });
+    } catch (error) {
+      print("Failed to fetch calculators: $error");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print("TESTING");
+    fetchData();
+  }
 
   // sign user out method
   void signUserOut() {
@@ -361,7 +385,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       ),
     );
   }
-
+  SampleItem? selectedItem;
 
 
   @override
@@ -374,7 +398,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     //
     // print('Pemain terang: ${terangMain}');
     // print(_minutes);
-    // print(_seconds);
+    // print();
 
     return Scaffold(
       backgroundColor: BasketcoColors.darkBackground,
@@ -519,11 +543,161 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 children: [
                   Container(
                     //alignment: Alignment.center,
-                    height: 110,
+                    height: 200,
                     width: 657,
                     decoration: BoxDecoration(
                       color: BasketcoColors.lightBackground, borderRadius: BorderRadius.circular(10),
                     ),
+                    child: StreamBuilder<List<Calculator>>(
+                        stream: _firestoreService.getCalculatorStreamFromMatch(widget.matchData.id!),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return buildLoadingIndicator();
+                          } else if (snapshot.hasError) {
+                            return Center(child: Text('Error: ${snapshot.error}'));
+                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return Center(child: Text('No data available'));
+                          } else {
+                            final calculatorData = snapshot.data!;
+                            final actionTypes = calculatorData.map((calc) => calc.action?.nama ?? '').toSet().toList();
+                            print(calculatorData);
+
+                            return
+                              ListView.separated(
+                                itemCount: calculatorData.length,
+                                // physics: const NeverScrollableScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.all(8),
+                                separatorBuilder: (BuildContext context, int index) => const Divider(),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return
+                                  ConstrainedBox(
+                                    constraints: const BoxConstraints(
+                                      minWidth: 70,
+                                      minHeight: 70,
+                                      maxHeight: 100,
+                                    ),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.amber[100],
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                      ),
+                                      child:  Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget> [
+                                          Container(
+                                            padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(6),
+                                              ),
+
+                                            ),
+                                            child:  Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                    calculatorData[index].quarter,
+                                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
+                                                ),
+                                                 Text(formattedTime(timeInSecond: calculatorData[index].time))],
+                                            ),
+                                          ),
+                                          SizedBox(width: 8,),
+                                          Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Container(
+                                                padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.green.shade100,
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(6),
+                                                  ),
+
+                                                ),
+                                                child:  Row(
+                                                  children: [
+                                                    Text(
+                                                        '#${calculatorData[index].nomorPunggung}',
+                                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    Text(calculatorData[index].tim)],
+                                                ),
+                                              ),
+                                              SizedBox(height: 8,),
+                                              Container(
+                                                padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.deepOrange.shade100,
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(6),
+                                                  ),
+
+                                                ),
+                                                child:  Row(
+                                                  children: [
+                                                    const Text(
+                                                        '+1',
+                                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    const Text("Missed")],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          SizedBox(width: 8,),
+                                          PopupMenuButton<SampleItem>(
+                                            initialValue: selectedItem,
+                                            onSelected: (SampleItem item) {
+                                              setState(() {
+                                                selectedItem = item;
+                                              });
+                                            },
+                                            itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
+                                              const PopupMenuItem<SampleItem>(
+                                                value: SampleItem.itemOne,
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(Icons.border_color, size: 16.0,),
+                                                    SizedBox(width: 8,),
+                                                    Text('Edit')
+                                                  ],
+                                                ),
+                                              ),
+                                              const PopupMenuItem<SampleItem>(
+                                                value: SampleItem.itemTwo,
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(Icons.delete, size: 16.0,),
+                                                    SizedBox(width: 8,),
+                                                    Text('Delete')
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                        ],
+                                      ),
+                                    ),
+                                  );
+
+                                },
+
+                              );
+                          }
+                        },
+                      ),
+
                   ),
                   // Positioned(
                   //   top: 5,
@@ -537,32 +711,38 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   //     ],
                   //   ),
                   // ),
-                  Positioned(
-                    top: 5,
-                    left: 15,
-                    child: isOk
-                        ? Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children:[
-                            Icon(Icons.check_circle, color: BasketcoColors.green, size: 30,),
-                            Padding(padding: EdgeInsets.all(8)),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('$selectedOption ${_formatTime(_lastElapsedTime)}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                                Text('${selectedValues.join()}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                                Text('${selectedValues2.join()}', style: TextStyle(fontSize: 20, color: Colors.white)),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
-                        : SizedBox(), // Jika false, tidak menampilkan apapun
-                  ),
+                  // Positioned(
+                  //   top: 5,
+                  //   left: 15,
+                  //   child: isOk
+                  //       ? Column(
+                  //     mainAxisAlignment: MainAxisAlignment.start,
+                  //     children: [
+                  //       ListView(
+                  //         padding: const EdgeInsets.all(8),
+                  //         children: <Widget>[
+                  //           Container(child: const Text("test"),)
+                  //         ],
+                  //       )
+                  //       // Row(
+                  //       //   mainAxisAlignment: MainAxisAlignment.start,
+                  //       //   children:[
+                  //       //     Icon(Icons.check_circle, color: BasketcoColors.green, size: 30,),
+                  //       //     Padding(padding: EdgeInsets.all(8)),
+                  //       //     Column(
+                  //       //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       //       children: [
+                  //       //         Text('$selectedOption ${_formatTime(_lastElapsedTime)}', style: TextStyle(fontSize: 20, color: Colors.white)),
+                  //       //         Text('${selectedValues.join()}', style: TextStyle(fontSize: 20, color: Colors.white)),
+                  //       //         Text('${selectedValues2.join()}', style: TextStyle(fontSize: 20, color: Colors.white)),
+                  //       //       ],
+                  //       //     ),
+                  //       //   ],
+                  //       // ),
+                  //     ],
+                  //   )
+                  //       : SizedBox(), // Jika false, tidak menampilkan apapun
+                  // ),
                 ],
               ),
               Padding(padding: EdgeInsets.all(4)),
@@ -903,4 +1083,18 @@ class _CalculatorPageState extends State<CalculatorPage> {
       ),
     );
   }
+  Widget buildLoadingIndicator() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
+
+formattedTime({required int timeInSecond}) {
+  int sec = timeInSecond % 60;
+  int min = (timeInSecond / 60).floor();
+  String minute = min.toString().length <= 1 ? "0$min" : "$min";
+  String second = sec.toString().length <= 1 ? "0$sec" : "$sec";
+  return "$minute : $second";
 }
