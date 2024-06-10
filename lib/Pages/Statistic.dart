@@ -16,6 +16,19 @@ class StatisticPage extends StatefulWidget {
 class _StatisticPageState extends State<StatisticPage> {
   FirestoreService firestoreService = FirestoreService();
 
+  void _deleteStatistics() async {
+    try {
+      await firestoreService.deleteStatistics(widget.matchData.id!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Statistics deleted successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete statistics: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +45,14 @@ class _StatisticPageState extends State<StatisticPage> {
             color: Colors.white,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete, color: Colors.white),
+            onPressed: () {
+              _deleteStatistics();
+            },
+          ),
+        ],
       ),
       body: StreamBuilder<List<Calculator>>(
         stream: firestoreService.getCalculatorStreamFromMatch(widget.matchData.id!),
@@ -245,5 +266,4 @@ class _StatisticPageState extends State<StatisticPage> {
 
     return rows;
   }
-
 }

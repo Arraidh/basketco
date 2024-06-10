@@ -122,4 +122,16 @@ class FirestoreService {
       return null;
     }
   }
+
+  Future<void> deleteStatistics(String matchId) async {
+    try {
+      var matchDoc = matches.doc(matchId);
+      await matchDoc.update({
+        'calculator': FieldValue.delete(),  // Menghapus objek 'calculator' dari dokumen
+      });
+    } catch (e) {
+      print('Failed to delete statistics: $e');
+      rethrow;
+    }
+  }
 }

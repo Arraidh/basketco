@@ -540,14 +540,33 @@ class _GetConfigurationPageState extends State<GetConfigurationPage> {
                 endIndent: 1, // Jarak dari kanan
               ),
               SizedBox(height: 20.0),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    _updateMatchData(); // Saat tombol ditekan, perbarui data pada Firestore
-                  },
-                  child: Text('Update Match'),
-                ),
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _updateMatchData(); // Saat tombol ditekan, perbarui data pada Firestore
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    child: Text('Update Match', style: TextStyle(fontSize: 18, color: Colors.white)),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                ],
+              )
+
             ],
           ),
         ),
