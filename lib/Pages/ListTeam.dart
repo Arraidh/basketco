@@ -328,8 +328,8 @@ class _ListTeamPageState extends State<ListTeamPage> {
                                             // );
                                             Navigator.pushNamed(
                                               context,
-                                              '/teamconfiguration',
-                                              arguments: TeamData(), // Berikan objek TeamData yang sudah ada
+                                              '/getteam',
+                                              arguments: teamData, // Berikan objek TeamData yang sudah ada
                                             );
 
                                           },
