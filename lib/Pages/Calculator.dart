@@ -82,6 +82,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     namaTim = (gelapTerang == 'terang') ? '${widget.matchData.terang}' : '${widget.matchData.gelap}';
     combinedValue = '$namaTim #$value';
     print(combinedValue);
+    print(selectedValues);
 
     setState(() {
       if (selectedValues.contains(combinedValue)) {
@@ -328,7 +329,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
 
     //EXTRACT TEAM AND ACTION
-    List<String> playerDetails = selectedValues[0].split(' #');
+    List<String> playerDetails = selectedValues[selectedValues.length-1].split(' #');
     String tim = playerDetails[0];
     String nomorPunggung = playerDetails[1];
     List<String> actionDetails = value1.split('+');
@@ -365,6 +366,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     );
 
     if(isEdittingLog) {
+      print("UPDATE");
       _editCalculatorItem(calculatorDataState, EdittingIndexOf, createCalculatorData);
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -374,6 +376,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
         ),
       );
     }else{
+      print("CREATE");
       _addCalculator(widget.matchData.id, createCalculatorData);
 
       ScaffoldMessenger.of(context).showSnackBar(
