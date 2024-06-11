@@ -311,9 +311,9 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                         ],
                                       ),
                                     ),
+                                    if (FirebaseAuth.instance.currentUser == null)
                                     Row(
                                       children: [
-                                        if (FirebaseAuth.instance.currentUser != null)
                                         ElevatedButton(
                                           onPressed: () {
                                             // Navigator.pushNamed(context, '/configuration', arguments: matchData,);

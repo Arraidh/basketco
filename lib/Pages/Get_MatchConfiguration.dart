@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:basketco/Utils/Colors.dart';
 import 'package:basketco/Models/match_data.dart';
@@ -540,6 +541,7 @@ class _GetConfigurationPageState extends State<GetConfigurationPage> {
                 endIndent: 1, // Jarak dari kanan
               ),
               SizedBox(height: 20.0),
+              if (FirebaseAuth.instance.currentUser != null)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
