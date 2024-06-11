@@ -3,6 +3,7 @@ import 'package:basketco/Models/match_data.dart';
 import 'package:basketco/Service/match_firestore.dart';
 import 'package:basketco/Utils/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class StatisticPage extends StatefulWidget {
   final MatchData matchData;
@@ -45,14 +46,14 @@ class _StatisticPageState extends State<StatisticPage> {
             color: Colors.white,
           ),
         ),
-        actions: [
+        actions: FirebaseAuth.instance.currentUser != null ? [
           IconButton(
             icon: Icon(Icons.delete, color: Colors.white),
             onPressed: () {
               _deleteStatistics();
             },
           ),
-        ],
+        ] : [],
       ),
       body: StreamBuilder<List<Calculator>>(
         stream: firestoreService.getCalculatorStreamFromMatch(widget.matchData.id!),
@@ -149,6 +150,16 @@ class _StatisticPageState extends State<StatisticPage> {
           ),
         );
       }
+      if (actionType == 'Made' || actionType == 'Missed') {
+        columns.add(
+          DataColumn(
+            label: Text(
+              actionType,
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+        );
+      }
     }
 
     return columns;
@@ -156,35 +167,50 @@ class _StatisticPageState extends State<StatisticPage> {
 
   List<DataRow> getRows(List<Calculator> calculatorData, List<String> actionTypes) {
     List<DataRow> rows = [];
+    int totalPTS = 0;
+    int totalFGM = 0;
+    int totalFGA = 0;
+    int totalFTM = 0;
+    int totalFTA = 0;
+    Map<String, int> totalActionType = {}; // Total action type
+
+    for (String actionType in actionTypes) {
+      totalActionType[actionType] = 0;
+    }
 
     for (String nomorPunggung in calculatorData.map((calc) => calc.nomorPunggung).toSet()) {
-      // Initialize statistics values
       int pts = 0;
       int fgm = 0;
       int fga = 0;
       int ftm = 0;
       int fta = 0;
-
       // Iterate over calculatorData to calculate statistics for each player
       for (Calculator calc in calculatorData) {
         if (calc.nomorPunggung == nomorPunggung) {
-          if (calc.action?.nama == 'Made') {
+          if (calc.action?.nama == 'Made ') {
             if (calc.action?.value == 1) {
               ftm++;
             } else if (calc.action?.value == 2 || calc.action?.value == 3) {
               fgm++;
             }
-          } else if (calc.action?.nama == 'Missed') {
+          } else if (calc.action?.nama == 'Missed ') {
             if (calc.action?.value == 1) {
               fta++;
             } else if (calc.action?.value == 2 || calc.action?.value == 3) {
               fga++;
             }
           }
+          totalActionType[calc.action!.nama!] = (totalActionType[calc.action?.nama!] ?? 0) + (calc.action?.value ?? 0);
         }
       }
 
       pts = (fgm * 2) + (ftm * 1); // Points calculation
+
+      totalPTS += pts;
+      totalFGM += fgm;
+      totalFGA += fga;
+      totalFTM += ftm;
+      totalFTA += fta;
 
       double fgPercentage = fga != 0 ? (fgm / fga) * 100 : 0;
       double ftPercentage = fta != 0 ? (ftm / fta) * 100 : 0;
@@ -263,6 +289,53 @@ class _StatisticPageState extends State<StatisticPage> {
 
       rows.add(DataRow(cells: cells));
     }
+
+    // Add total row
+    rows.add(DataRow(
+      cells: [
+        DataCell(Text(
+          'Total',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          totalPTS.toString(),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          totalFGM.toString(),
+          style: TextStyle(color:
+          Colors.white, fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          totalFGA.toString(),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          (totalFGM / totalFGA * 100).toStringAsFixed(2) + '%',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          totalFTM.toString(),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          totalFTA.toString(),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        )),
+        DataCell(Text(
+          (totalFTM / totalFTA * 100).toStringAsFixed(2) + '%',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        )),
+      ] +
+          actionTypes.map<DataCell>((actionType) {
+            return DataCell(
+              Text(
+                totalActionType[actionType].toString(),
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            );
+          }).toList(),
+    ));
 
     return rows;
   }
