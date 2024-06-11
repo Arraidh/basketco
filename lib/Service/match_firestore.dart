@@ -43,6 +43,14 @@ class FirestoreService {
     return matches.doc(docID).update({"calculator": FieldValue.arrayUnion([calculator.toJson()])});
   }
 
+  List<Map<String, dynamic>> calculatorsToJson(List<Calculator> events) {
+    return events.map((event) => event.toJson()).toList();
+  }
+
+  Future<void> rewriteCalculatorMatch(String? docID, List<Calculator> calculator) {
+    return matches.doc(docID).update({"calculator": calculatorsToJson(calculator)});
+  }
+
   Future<List<Calculator>> getCalculatorsFromMatch(String matchId) async {
     try {
       DocumentSnapshot doc = await matches.doc(matchId).get();

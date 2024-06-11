@@ -30,26 +30,13 @@ class CalculatorPage extends StatefulWidget {
 class _CalculatorPageState extends State<CalculatorPage> {
 
   final FirestoreService _firestoreService = FirestoreService();
-  List<Calculator> calculatorData = [];
+  List<Calculator> calculatorDataState = [];
 
-  //GET calculator data list
-  void fetchData() async {
-    try {
-      final calculators = await _firestoreService.getCalculatorsFromMatch(widget.matchData.id!);
 
-      setState(() {
-        calculatorData = calculators;
-      });
-    } catch (error) {
-      print("Failed to fetch calculators: $error");
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    print("TESTING");
-    fetchData();
   }
 
   // sign user out method
@@ -94,6 +81,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     gelapTerang1 = gelapTerang;
     namaTim = (gelapTerang == 'terang') ? '${widget.matchData.terang}' : '${widget.matchData.gelap}';
     combinedValue = '$namaTim #$value';
+    print(combinedValue);
 
     setState(() {
       if (selectedValues.contains(combinedValue)) {
@@ -268,6 +256,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
     });
   }
 
+  bool isEdittingLog = false;
+  int EdittingIndexOf = -1;
+
   void _handleOkButtonPress() {
 
     //Querter
@@ -373,19 +364,81 @@ class _CalculatorPageState extends State<CalculatorPage> {
         action: calculatorAction
     );
 
-    _addCalculator(widget.matchData.id, createCalculatorData);
+    if(isEdittingLog) {
+      _editCalculatorItem(calculatorDataState, EdittingIndexOf, createCalculatorData);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Data Terbarui'),
+          duration: Duration(seconds: 2), // Durasi tampilan Snackbar
+        ),
+      );
+    }else{
+      _addCalculator(widget.matchData.id, createCalculatorData);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Data Baru terkirim'),
+          duration: Duration(seconds: 2), // Durasi tampilan Snackbar
+        ),
+      );
+    }
 
 
 
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Data terkirim'),
-        duration: Duration(seconds: 2), // Durasi tampilan Snackbar
-      ),
-    );
+
+
   }
   SampleItem? selectedItem;
+
+  void _editCalculatorItem(List<Calculator> data, int index, Calculator submittedData) {
+
+
+    data[index] = submittedData;
+    _firestoreService.rewriteCalculatorMatch(widget.matchData.id, data);
+    setState(() {
+      isEdittingLog = false;
+      EdittingIndexOf = -1;
+    });
+  }
+
+  void setEdittedLog(int index){
+    if(!isEdittingLog){
+      setState(() {
+        isEdittingLog = true;
+        EdittingIndexOf = index;
+      });
+    }else{
+      setState(() {
+        isEdittingLog = false;
+        EdittingIndexOf = -1;
+      });
+    }
+
+  }
+
+
+  void _deleteItem(List<Calculator> data, int index) {
+    print(data.length);
+    print(index);
+    data.removeAt(index );
+    print(data.length);
+
+    // setState(() {
+    //
+    // });
+    _firestoreService.rewriteCalculatorMatch(widget.matchData.id, data);
+  }
+
+
+
+  void _getCalculatorData(List<Calculator> data){
+    setState(() {
+      calculatorDataState = data;
+    });
+  }
+
 
 
   @override
@@ -558,9 +611,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                             return Center(child: Text('No data available'));
                           } else {
+
                             final calculatorData = snapshot.data!;
-                            final actionTypes = calculatorData.map((calc) => calc.action?.nama ?? '').toSet().toList();
-                            print(calculatorData);
+
+
+
+                            // final actionTypes = calculatorData.map((calc) => calc.action?.nama ?? '').toSet().toList();
+                            // print(calculatorData.length);
+
 
                             return
                               ListView.separated(
@@ -581,7 +639,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                     child: Container(
                                       padding: const EdgeInsets.all(8.0),
                                       decoration: BoxDecoration(
-                                        color: Colors.amber[100],
+                                        color: EdittingIndexOf == index ?Colors.amber[200] :  Colors.amber[100],
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(10),
                                         ),
@@ -643,48 +701,32 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                                 ),
                                                 child:  Row(
                                                   children: [
-                                                    const Text(
-                                                        '+1',
+                                                     Text(
+                                                        calculatorData[index].action.value !=0 ?
+                                                        '+${calculatorData[index].action.value}'
+                                                        : '',
                                                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)
                                                     ),
                                                     SizedBox(width: 8),
-                                                    const Text("Missed")],
+                                                    Text(calculatorData[index].action.nama),
+                                                  ]
                                                 ),
                                               ),
                                             ],
                                           ),
 
                                           SizedBox(width: 8,),
-                                          PopupMenuButton<SampleItem>(
-                                            initialValue: selectedItem,
-                                            onSelected: (SampleItem item) {
-                                              setState(() {
-                                                selectedItem = item;
-                                              });
-                                            },
-                                            itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
-                                              const PopupMenuItem<SampleItem>(
-                                                value: SampleItem.itemOne,
-                                                child: Row(
-                                                  children: <Widget>[
-                                                    Icon(Icons.border_color, size: 16.0,),
-                                                    SizedBox(width: 8,),
-                                                    Text('Edit')
-                                                  ],
-                                                ),
-                                              ),
-                                              const PopupMenuItem<SampleItem>(
-                                                value: SampleItem.itemTwo,
-                                                child: Row(
-                                                  children: <Widget>[
-                                                    Icon(Icons.delete, size: 16.0,),
-                                                    SizedBox(width: 8,),
-                                                    Text('Delete')
-                                                  ],
-                                                ),
-                                              ),
+                                          Row(
+                                            children: <Widget>[
+                                              IconButton(onPressed: () => {
+                                                setEdittedLog(index),
+                                              _getCalculatorData(calculatorData)
+                                              } ,
+                                                icon: isEdittingLog && EdittingIndexOf == index ? Icon(Icons.clear)  : Icon(Icons.edit)) ,
+                                              IconButton(onPressed: () => _deleteItem(calculatorData, index),
+                                                  icon: const Icon(Icons.delete))
                                             ],
-                                          ),
+                                          )
 
                                         ],
                                       ),
@@ -1049,6 +1091,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           text: 'Clear',
                           onPressed: () {
                             _handleClearButtonPress();
+                            if(isEdittingLog){
+                              setEdittedLog(0);
+                            }
                             // Vibration.vibrate(duration: 100, amplitude: 128);
                           },
                           value: 'clear',
