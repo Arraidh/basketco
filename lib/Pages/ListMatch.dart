@@ -311,7 +311,7 @@ class _ListMatchPageState extends State<ListMatchPage> {
                                         ],
                                       ),
                                     ),
-                                    if (FirebaseAuth.instance.currentUser == null)
+                                    if (FirebaseAuth.instance.currentUser == null || FirebaseAuth.instance.currentUser != null)
                                     Row(
                                       children: [
                                         ElevatedButton(
